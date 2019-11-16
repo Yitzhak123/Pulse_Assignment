@@ -1,0 +1,7 @@
+*.pyc
+*~
+/.vscode
+__pycache__
+pulse_assignment_venv
+db.sqlite3
+/static

@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+<body>
+
+{% for series_n, pulse_coordinates in pulse_coordinates_by_series_n.items %}
+    <ul id="series_{{ series_n }}" hidden>
+    {% for coordinate in pulse_coordinates %}
+        <li>{{ coordinate.0 }} , {{ coordinate.1}}</li>
+    {% endfor %}
+    </ul>
+{% endfor %}
+
+<div >
+<select>
+    {% for series_n, pulse_coordinates in pulse_coordinates_by_series_n.items %}
+    <option value="select {{ series_n }}">select {{ series_n }}</option>
+    {% endfor %}
+</select>
+</div>
+
+<div style="
+    margin-top: 4%;
+    margin-left: 20%;
+">
+<canvas id="myCanvas" width="200" height="100"
+style="border:1px solid #d3d3d3;">
+Your browser does not support the canvas element.
+</canvas>
+</div>
+
+<script>
+
+var canvas = document.getElementById("myCanvas");
+var ctx = canvas.getContext("2d");
+ctx.translate(0, canvas.height);
+ctx.scale(1, -1);
+ctx.moveTo(0, 0);
+ctx.lineTo(100, 80);
+ctx.lineTo(200,100);
+ctx.stroke();
+
+coordinates_list = document.getElementById('series_3').childNodes
+coordinates = coordinates_list[1].innerText
+delim = ','
+i = coordinates.indexOf(delim)
+c1 = parseFloat(coordinates.substring(0,i))
+c2 = parseFloat(coordinates.substring(i+1, coordinates.length))
+console.log(c1)
+console.log(c2)
+</script>
+
+</body>
+</html>
