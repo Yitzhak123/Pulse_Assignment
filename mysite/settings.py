@@ -119,3 +119,10 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/2.2/howto/static-files/
 
 STATIC_URL = '/static/'
+
+SD_HOST = 'interview.storedot.us'
+SD_PORT = 3306
+SD_USER = 'storedot'
+SD_PASSWORD = 'KVzQU-5an@gGa5e'
+
+API_HOST_OF_STOREDOT = 'http://interview.storedot.us/api/index.php/'

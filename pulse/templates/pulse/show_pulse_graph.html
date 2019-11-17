@@ -2,18 +2,25 @@
 <html>
 <body>
 
+<div id="listOfSeries_nCoordinatesList"> <h2>Pulse graph Coordinates:</h2>
 {% for series_n, pulse_coordinates in pulse_coordinates_by_series_n.items %}
-    <ul id="series_{{ series_n }}" hidden>
+    <ul id="series_n" hidden></ul>
+    <ul id="series_{{ series_n }}" class="series_n_coordinates_list" hidden>
     {% for coordinate in pulse_coordinates %}
         <li>{{ coordinate.0 }} , {{ coordinate.1}}</li>
     {% endfor %}
     </ul>
 {% endfor %}
+</div>
 
-<div >
-<select>
+<div style="
+    margin-top: 6%;
+    margin-left: 10%;
+">
+<select id="series_n_options" onchange="showPulseGraph(event)">
+    <option value="series n">series n</option>
     {% for series_n, pulse_coordinates in pulse_coordinates_by_series_n.items %}
-    <option value="select {{ series_n }}">select {{ series_n }}</option>
+    <option value="series {{ series_n }}">series {{ series_n }}</option>
     {% endfor %}
 </select>
 </div>
@@ -22,31 +29,48 @@
     margin-top: 4%;
     margin-left: 20%;
 ">
-<canvas id="myCanvas" width="200" height="100"
-style="border:1px solid #d3d3d3;">
+<canvas id="pulseGraph" width="800" height="270"
+style="border:3px solid #d3d3d3;">
 Your browser does not support the canvas element.
 </canvas>
+</div>
+<div id="canvas-graph-description">
+    <p>Y axis = Voltage, X axis = Influx</p>
+    <p>Voltage start point = 3, Influx start point = -400 </p>
+    <p>Voltage end point = 4.5, Influx start point = 400 </p>
 </div>
 
 <script>
 
-var canvas = document.getElementById("myCanvas");
+var canvas = document.getElementById("pulseGraph");
 var ctx = canvas.getContext("2d");
-ctx.translate(0, canvas.height);
+var x_min = -400, x_max=400, y_min=3, y_max=4.2;
+ctx.translate(-1*x_min, canvas.height);
 ctx.scale(1, -1);
-ctx.moveTo(0, 0);
-ctx.lineTo(100, 80);
-ctx.lineTo(200,100);
-ctx.stroke();
 
-coordinates_list = document.getElementById('series_3').childNodes
-coordinates = coordinates_list[1].innerText
-delim = ','
-i = coordinates.indexOf(delim)
-c1 = parseFloat(coordinates.substring(0,i))
-c2 = parseFloat(coordinates.substring(i+1, coordinates.length))
-console.log(c1)
-console.log(c2)
+function showPulseGraph(event) {
+    ctx.clearRect(-400, 0, canvas.width, canvas.height);
+    ctx.beginPath();
+    coordinatesListId = event.target.value.replace(' ', '_')
+
+    // Hide all coordinates list elements except from the one chosen
+    arr = document.getElementsByClassName('series_n_coordinates_list');
+    for (i=0; i<arr.length; i+=1) { arr[i].hidden = true;}
+    document.getElementById(coordinatesListId).hidden = false;
+
+    coordinatesList = document.getElementById(coordinatesListId).childNodes
+    for (i=1; i<coordinatesList.length; i+=2) {
+        coordinates = coordinatesList[i].innerText
+        delim = ','
+        j = coordinates.indexOf(delim)
+        x = parseFloat(coordinates.substring(0,j))
+        y = parseFloat(coordinates.substring(j+1, coordinates.length))
+        y_positionRelative = (y-y_min)*180
+        ctx.lineTo(x, y_positionRelative);
+    }
+    ctx.stroke();
+}
+
 </script>
 
 </body>
